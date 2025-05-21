@@ -13,7 +13,10 @@ import { GetUserFromUsername } from './utils/userQueries.mjs'
 const app = express();
 const pgp = pgPromise();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 
 app.use(express.json())
 
@@ -49,9 +52,6 @@ db.connect().then(obj => {
 }).catch(error => {
     console.log('ERROR: ', error.message || error);
 })
-
-// var user = await GetUserFromUsername("Erik");
-// if(user) console.log(user.username);
 
 app.get('/', (request, response) => {
     console.log(request.session);

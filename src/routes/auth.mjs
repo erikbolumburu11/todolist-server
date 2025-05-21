@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { users } from '../utils/users.mjs'
 import passport from 'passport'
 import '../strategies/local-strategy.mjs'
 import { RegisterUser } from "../utils/userQueries.mjs";
@@ -23,6 +22,7 @@ authRouter.post('/register/', (request, response) => {
 });
 
 authRouter.get('/status/', (request, response) => {
+    console.log(request.session.id);
     if(request.user){
         response.status(200).send(request.user);
     }
