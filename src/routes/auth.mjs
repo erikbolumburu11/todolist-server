@@ -2,15 +2,9 @@ import { Router } from "express";
 import { users } from '../utils/users.mjs'
 import passport from 'passport'
 import '../strategies/local-strategy.mjs'
+import { RegisterUser } from "../utils/userQueries.mjs";
 
 const authRouter = Router();
-
-authRouter.get('/users/', (request, response) => {
-    console.log(request.session);
-    console.log(request.session.id);
-    request.session.visited = true;
-    response.send(users);
-});
 
 authRouter.post('/login/', passport.authenticate('local'), (request, response) => {
     response.send(200);
@@ -22,6 +16,10 @@ authRouter.post('/logout/', (request, response) => {
         if(err) return response.sendStatus(400);
         response.send(200);
     });
+});
+
+authRouter.post('/register/', (request, response) => {
+    return RegisterUser(request.body.username, request.body.password, response);
 });
 
 authRouter.get('/status/', (request, response) => {
