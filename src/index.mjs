@@ -8,6 +8,7 @@ import dotenv from 'dotenv'
 dotenv.config({ path: './.env'});
 
 import authRouter from './routes/auth.mjs'
+import tasksRouter from './routes/tasks.mjs'
 import { GetUserFromUsername } from './utils/userQueries.mjs'
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(passport.initialize());
 app.use(passport.session())
 
 app.use('/auth/', authRouter);
+app.use('/tasks/', tasksRouter);
 
 const dbConnection = {
     host: process.env.DB_HOSTNAME,
@@ -48,19 +50,10 @@ export const db = pgp(dbConnection);
 db.connect().then(obj => {
     const serverVersion = obj.client.serverVersion;
     obj.done();
-    console.log(serverVersion);
+    console.log("Server Connected to Database! Version: " + serverVersion);
 }).catch(error => {
     console.log('ERROR: ', error.message || error);
 })
-
-app.get('/', (request, response) => {
-    console.log(request.session);
-    console.log(request.session.id);
-    request.session.visited = true;
-
-    response.send('Hello World!');
-});
-
 
 app.listen(8080, () => {
     console.log('Server listening on port 8080');

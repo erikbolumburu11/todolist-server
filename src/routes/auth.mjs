@@ -22,9 +22,8 @@ authRouter.post('/register/', (request, response) => {
 });
 
 authRouter.get('/status/', (request, response) => {
-    console.log(request.session.id);
     if(request.user){
-        response.status(200).send(request.user);
+        response.status(200).send(request.user.username);
     }
     else {
         response.status(401).send({msg: 'Not authenticated'});

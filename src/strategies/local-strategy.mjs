@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy } from 'passport-local';
 import { GetUserByID, GetUserFromUsername } from "../utils/userQueries.mjs";
+import { comparePassword} from "../utils/authentication.mjs";
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -22,7 +23,7 @@ export default passport.use(
         try {
             const user = await GetUserFromUsername(username);
             if(!user) throw new Error("User not found");
-            if(user.password !== password) throw new Error("Bad credentials");
+            if(!comparePassword(password, user.password)) throw new Error("Bad credentials");
             done(null, user);
         }
         catch (error) {
