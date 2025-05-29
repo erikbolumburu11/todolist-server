@@ -23,7 +23,19 @@ authRouter.post('/register/', (request, response) => {
 
 authRouter.get('/status/', (request, response) => {
     if(request.user){
-        response.status(200).send(request.user.username);
+        response.status(200).send();
+    }
+    else {
+        response.status(401).send({msg: 'Not authenticated'});
+    }
+});
+
+authRouter.get('/userdata/', (request, response) => {
+    if(request.user){
+        response.status(200).send({
+            id: request.user.id,
+            username: request.user.username,
+        });
     }
     else {
         response.status(401).send({msg: 'Not authenticated'});
