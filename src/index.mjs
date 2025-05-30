@@ -3,6 +3,7 @@ import session from 'express-session'
 import passport from 'passport'
 import cors from 'cors'
 import pgPromise from 'pg-promise'
+import connectpg from 'connect-pg-simple'
 
 import dotenv from 'dotenv'
 dotenv.config({ path: './.env'});
@@ -21,21 +22,6 @@ app.use(cors({
 
 app.use(express.json())
 
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
-    resave: false,
-    cookie: {
-        maxAge: 60000 * 60 * 24,
-    },
-}));
-
-app.use(passport.initialize());
-app.use(passport.session())
-
-app.use('/auth/', authRouter);
-app.use('/tasks/', tasksRouter);
-
 const dbConnection = {
     host: process.env.DB_HOSTNAME,
     port: process.env.DB_PORT,
@@ -44,6 +30,7 @@ const dbConnection = {
     password: process.env.DB_PASSWORD,
     max: 30
 }
+
 export const db = pgp(dbConnection);
 
 // Test DB Connection
@@ -54,6 +41,23 @@ db.connect().then(obj => {
 }).catch(error => {
     console.log('ERROR: ', error.message || error);
 })
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
+    cookie: { maxAge: 60000 * 60 * 24, },
+    store: new (connectpg(session))({
+        pgPromise: db
+    })
+}));
+
+app.use(passport.initialize());
+app.use(passport.session())
+
+app.use('/auth/', authRouter);
+app.use('/tasks/', tasksRouter);
+
 
 app.listen(8080, () => {
     console.log('Server listening on port 8080');
