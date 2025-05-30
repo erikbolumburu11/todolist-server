@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { createTask, deleteTask, getUserTasks, setTaskDone } from "../utils/taskQueries.mjs";
+import { createTask, deleteTask, getUserTasks, setTaskDone, updateTask } from "../utils/taskQueries.mjs";
 
 const tasksRouter = Router();
 
 tasksRouter.post('/new/', (request, response) => {
     return createTask(request.body.taskName, request.user.id, response);
+});
+
+tasksRouter.post('/update/', (request, response) => {
+    return updateTask(request.body.updates, request.body.taskid, request.user.id, response);
 });
 
 tasksRouter.post('/delete/', (request, response) => {
