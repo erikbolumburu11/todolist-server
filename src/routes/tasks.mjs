@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTask, deleteTask, getUserTasks, setTaskDone, updateTask } from "../utils/taskQueries.mjs";
+import { createTask, deleteTask, getGroups, getGroupTasks, getUserTasks, setTaskDone, updateTask } from "../utils/taskQueries.mjs";
 
 const tasksRouter = Router();
 
@@ -19,13 +19,24 @@ tasksRouter.post('/setdone/', (request, response) => {
     return setTaskDone(request.body.taskid, request.body.done, request.user.id, response);
 });
 
-tasksRouter.get('/getusertasks/', (request, response) => {
-    if(request.user){
-        return getUserTasks(request.user.id, response);
-    }
-    else {
-        response.status(401).send({msg: 'Not authenticated'});
-    }
+tasksRouter.get('/get/', (request, response) => {
+    if(!request.user) response.status(401).send({msg: 'Not authenticated'});
+    return getUserTasks(request.user.id, response);
+
+});
+
+tasksRouter.get('/get/groups/', (request, response) => {
+    if(!request.user) response.status(401).send({msg: 'Not authenticated'});
+    return getGroups(request.user.id, response);
+});
+
+tasksRouter.get('/get/:groupid/', (request, response) => {
+    if(!request.user) response.status(401).send({msg: 'Not authenticated'});
+
+    const groupid = request.params.groupid;
+    if(groupid === '-1') return getUserTasks(request.user.id, response);
+
+    return getGroupTasks(request.user.id, groupid, response)
 });
 
 export default tasksRouter;

@@ -78,3 +78,28 @@ export function getUserTasks(userid, response){
         return response.status(400).send(error.toString());
     });
 }
+
+export function getGroups(userid, response){
+    db.manyOrNone('SELECT * FROM groups WHERE user_id = $1',
+        [
+            userid
+        ]
+    ).then((groups) => {
+        return response.status(200).send(groups);
+    }).catch((error) => {
+        return response.status(400).send(error.toString());
+    });
+}
+
+export function getGroupTasks(userid, groupid, response){
+    db.manyOrNone('SELECT * FROM tasks WHERE userid = $1 AND group_id = $2',
+        [
+            userid,
+            groupid
+        ]
+    ).then((tasks) => {
+        return response.status(200).send(tasks);
+    }).catch((error) => {
+        return response.status(400).send(error.toString());
+    });
+}
