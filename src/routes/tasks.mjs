@@ -4,7 +4,7 @@ import { createTask, deleteTask, getGroups, getGroupTasks, getUserTasks, setTask
 const tasksRouter = Router();
 
 tasksRouter.post('/new/', (request, response) => {
-    return createTask(request.body.taskName, request.user.id, request.body.due, response);
+    return createTask(request.body.taskName, request.user.id, request.body.due, request.body.groupid, response);
 });
 
 tasksRouter.post('/update/', (request, response) => {

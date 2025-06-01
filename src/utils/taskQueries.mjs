@@ -1,12 +1,13 @@
 import { db } from '../index.mjs'
 
-export function createTask(name, userid, due, response){
-    db.one('INSERT INTO tasks(name, done, due, userid) VALUES($1, $2, $3, $4) RETURNING *',
+export function createTask(name, userid, due, groupid, response){
+    db.one('INSERT INTO tasks(name, done, due, groupid, userid) VALUES($1, $2, $3, $4, $5) RETURNING *',
         [
             name,
             false,
             due,
-            userid
+            groupid,
+            userid,
         ]
     ).then((data) => {
         return response.status(200).send({id: data.id, name: data.name, done: data.done, due: data.due, groupid: data.groupid});
