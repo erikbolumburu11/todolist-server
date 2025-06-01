@@ -4,10 +4,16 @@ import { createTask, deleteTask, getGroups, getGroupTasks, getUserTasks, setTask
 const tasksRouter = Router();
 
 tasksRouter.post('/new/', (request, response) => {
-    return createTask(request.body.taskName, request.user.id, request.body.due, request.body.groupid, response);
+    const groupid = request.body.groupid === -1 ? null : request.body.groupid;
+    return createTask(request.body.taskName, request.user.id, request.body.due, groupid, response);
 });
 
 tasksRouter.post('/update/', (request, response) => {
+    request.body.updates.groupid = request.body.updates.groupid === -1 ?
+        null : 
+        request.body.updates.groupid;
+
+
     return updateTask(request.body.updates, request.body.taskid, request.user.id, response);
 });
 
