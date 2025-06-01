@@ -1,7 +1,7 @@
 import { db } from '../index.mjs'
 
 export function createTask(name, userid, due, response){
-    db.one('INSERT INTO tasks(name, done, due, userid) VALUES($1, $2, $3, $4) RETURNING id, name, done, due',
+    db.one('INSERT INTO tasks(name, done, due, userid) VALUES($1, $2, $3, $4) RETURNING *',
         [
             name,
             false,
@@ -9,7 +9,7 @@ export function createTask(name, userid, due, response){
             userid
         ]
     ).then((data) => {
-        return response.status(200).send({id: data.id, name: data.name, done: data.done, due: data.due});
+        return response.status(200).send({id: data.id, name: data.name, done: data.done, due: data.due, groupid: data.groupid});
     }).catch((error) =>{
         return response.status(400).send(error.toString());
     });
@@ -80,7 +80,7 @@ export function getUserTasks(userid, response){
 }
 
 export function getGroups(userid, response){
-    db.manyOrNone('SELECT * FROM groups WHERE user_id = $1',
+    db.manyOrNone('SELECT * FROM groups WHERE userid = $1',
         [
             userid
         ]
@@ -92,7 +92,7 @@ export function getGroups(userid, response){
 }
 
 export function getGroupTasks(userid, groupid, response){
-    db.manyOrNone('SELECT * FROM tasks WHERE userid = $1 AND group_id = $2',
+    db.manyOrNone('SELECT * FROM tasks WHERE userid = $1 AND groupid = $2',
         [
             userid,
             groupid
