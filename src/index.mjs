@@ -35,12 +35,12 @@ db.connect().then(obj => {
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    saveUninitialized: false,
-    resave: false,
+    saveUninitialized: true,
+    resave: true,
     cookie: {
         maxAge: 60000 * 60 * 24, 
         sameSite: 'none',
-        secure: true
+        secure: true,
     },
     store: new (connectpg(session))({
         pgPromise: db
