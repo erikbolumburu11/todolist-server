@@ -1,14 +1,18 @@
 import { Router } from "express";
-import { createTask, deleteTask, getGroups, getGroupTasks, getUserTasks, setTaskDone, updateTask } from "../utils/taskQueries.mjs";
+import { createGroup, createTask, deleteGroup, deleteTask, getGroups, getGroupTasks, getUserTasks, setTaskDone, updateGroup, updateTask } from "../utils/taskQueries.mjs";
 
 const tasksRouter = Router();
 
-tasksRouter.post('/new/', (request, response) => {
+tasksRouter.post('/new/task/', (request, response) => {
     const groupid = request.body.groupid === -1 ? null : request.body.groupid;
     return createTask(request.body.taskName, request.user.id, request.body.due, groupid, response);
 });
 
-tasksRouter.post('/update/', (request, response) => {
+tasksRouter.post('/new/group/', (request, response) => {
+    return createGroup(request.body.groupName, request.user.id, response);
+});
+
+tasksRouter.post('/update/task/', (request, response) => {
     request.body.updates.groupid = request.body.updates.groupid === -1 ?
         null : 
         request.body.updates.groupid;
@@ -17,8 +21,16 @@ tasksRouter.post('/update/', (request, response) => {
     return updateTask(request.body.updates, request.body.taskid, request.user.id, response);
 });
 
-tasksRouter.post('/delete/', (request, response) => {
+tasksRouter.post('/update/group/', (request, response) => {
+    return updateGroup(request.body.updates, request.body.groupid, request.user.id, response);
+});
+
+tasksRouter.post('/delete/task/', (request, response) => {
     return deleteTask(request.body.taskid, request.user.id, response);
+});
+
+tasksRouter.post('/delete/group/', (request, response) => {
+    return deleteGroup(request.body.groupid, request.user.id, response);
 });
 
 tasksRouter.post('/setdone/', (request, response) => {

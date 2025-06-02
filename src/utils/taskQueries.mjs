@@ -16,6 +16,19 @@ export function createTask(name, userid, due, groupid, response){
     });
 }
 
+export function createGroup(name, userid, response){
+    db.one('INSERT INTO groups(name, userid) VALUES($1, $2) RETURNING *',
+        [
+            name,
+            userid
+        ]
+    ).then((data) => {
+        return response.status(200).send({id: data.id, name: data.name});
+    }).catch((error) =>{
+        return response.status(400).send(error.toString());
+    });
+}
+
 export function updateTask(updates, taskid, requestUserId, response){
     const keys = Object.keys(updates);
     const setClauses = keys.map((key, index) => `${key} = $${index + 1}`);
@@ -32,6 +45,31 @@ export function updateTask(updates, taskid, requestUserId, response){
         [
             ...values,
             taskid,
+            requestUserId
+        ]
+    ).then((data) => {
+        return response.status(200).send({data});
+    }).catch((error) => {
+        return response.status(400).send(error.toString());
+    });
+}
+
+export function updateGroup(updates, groupid, requestUserId, response){
+    const keys = Object.keys(updates);
+    const setClauses = keys.map((key, index) => `${key} = $${index + 1}`);
+    const values = Object.values(updates);
+
+    const query = `
+        UPDATE groups 
+        SET ${setClauses.join(',')}
+        WHERE id = $${keys.length + 1} AND userid = $${keys.length + 2}
+        RETURNING *
+    `;
+
+    db.one(query,
+        [
+            ...values,
+            groupid,
             requestUserId
         ]
     ).then((data) => {
@@ -59,6 +97,19 @@ export function deleteTask(taskid, requestUserId, response){
     db.oneOrNone('DELETE FROM tasks WHERE id = $1 AND userid = $2',
         [
             taskid,
+            requestUserId
+        ]
+    ).then(() => {
+        return response.status(200).send();
+    }).catch((error) => {
+        return response.status(400).send(error.toString());
+    });
+}
+
+export function deleteGroup(groupid, requestUserId, response){
+    db.oneOrNone('DELETE FROM groups WHERE id = $1 AND userid = $2',
+        [
+            groupid,
             requestUserId
         ]
     ).then(() => {
