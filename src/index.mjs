@@ -15,10 +15,13 @@ import { GetUserFromUsername } from './utils/userQueries.mjs'
 const app = express();
 const pgp = pgPromise();
 
-app.use(cors({
-    origin: 'https://bolumburutodolist.netlify.app',
-    credentials: true
-}));
+const corsOptions = {
+  origin: 'https://bolumburutodolist.netlify.app',
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json())
 
