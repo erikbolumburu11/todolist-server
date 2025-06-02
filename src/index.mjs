@@ -17,7 +17,9 @@ const pgp = pgPromise();
 
 app.use(cors({
     origin: 'https://bolumburutodolist.netlify.app',
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Set-Cookie'],
+    exposedHeaders: ['Set-Cookie']
 }));
 
 app.use(express.json())
