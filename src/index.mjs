@@ -16,7 +16,7 @@ const app = express();
 const pgp = pgPromise();
 
 app.use(cors({
-    origin: 'bolumburutodolist.netlify.app',
+    origin: 'https://bolumburutodolist.netlify.app',
     credentials: true
 }));
 
