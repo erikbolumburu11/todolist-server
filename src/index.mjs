@@ -41,6 +41,7 @@ app.use(session({
         maxAge: 60000 * 60 * 24, 
         sameSite: 'none',
         secure: true,
+        path: '/'
     },
     store: new (connectpg(session))({
         pgPromise: db
