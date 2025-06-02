@@ -43,8 +43,8 @@ authRouter.get('/status/', (request, response) => {
 });
 
 authRouter.get('/userdata/', (request, response) => {
-    console.log('Session:', req.session);
-    console.log('User:', req.user);
+    console.log('Session:', request.session);
+    console.log('User:', request.user);
     if(request.user){
         response.status(200).send({
             id: request.user.id,
