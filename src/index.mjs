@@ -22,16 +22,7 @@ app.use(cors({
 
 app.use(express.json())
 
-const dbConnection = {
-    host: process.env.DB_HOSTNAME,
-    port: process.env.DB_PORT,
-    database: process.env.DB_NAME,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    max: 30
-}
-
-export const db = pgp(dbConnection);
+export const db = pgp(process.env.NEON_CONNECTION_STRING);
 
 // Test DB Connection
 db.connect().then(obj => {
