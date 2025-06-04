@@ -12,13 +12,23 @@ import authRouter from './routes/auth.mjs'
 import tasksRouter from './routes/tasks.mjs'
 import { GetUserFromUsername } from './utils/userQueries.mjs'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 const app = express();
 const pgp = pgPromise();
 
-app.use(cors({
-    origin: 'https://bolumburutodolist.netlify.app',
-    credentials: true
-}));
+if(isProduction){
+    app.use(cors({
+        origin: 'https://bolumburutodolist.netlify.app',
+        credentials: true
+    }));
+}
+else {
+    app.use(cors({
+        origin: 'http://localhost:3000',
+        credentials: true
+    }));
+}
 
 app.set('trust proxy', 1);
 
@@ -35,7 +45,6 @@ db.connect().then(obj => {
     console.log('ERROR: ', error.message || error);
 })
 
-const isProduction = process.env.NODE_ENV === 'production'
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
