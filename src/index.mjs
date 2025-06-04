@@ -35,14 +35,16 @@ db.connect().then(obj => {
     console.log('ERROR: ', error.message || error);
 })
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
     resave: true,
     cookie: {
         maxAge: 60000 * 60 * 24, 
-        sameSite: 'none',
-        secure: true,
+        sameSite: isProduction ? 'none' : 'lax',
+        secure: isProduction,
         path: '/'
     },
     store: new (connectpg(session))({

@@ -48,7 +48,7 @@ tasksRouter.get('/get/groups/', (request, response) => {
     return getGroups(request.user.id, response);
 });
 
-tasksRouter.get('/get/:groupid/', (request, response) => {
+tasksRouter.get('/get/:groupid', (request, response) => {
     if(!request.user) response.status(401).send({msg: 'Not authenticated'});
 
     const groupid = request.params.groupid;
