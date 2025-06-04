@@ -20,6 +20,8 @@ app.use(cors({
     credentials: true
 }));
 
+app.set('trust proxy', 1);
+
 app.use(express.json())
 
 export const db = pgp(process.env.NEON_CONNECTION_STRING);
