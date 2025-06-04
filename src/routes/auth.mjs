@@ -5,21 +5,23 @@ import { RegisterUser } from "../utils/userQueries.mjs";
 
 const authRouter = Router();
 
-// authRouter.post('/login/', passport.authenticate('local'), (request, response) => {
-//     response.send(200);
-// });
-
-authRouter.post('/login/', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) return next(err);
-        if (!user) return res.status(401).json({ message: 'Invalid credentials' });
-
-        req.login(user, (err) => {
-            if (err) return next(err);
-            return res.status(200).json({ message: 'Logged in successfully' });
-        });
-    })(req, res, next);
+authRouter.post('/login/', passport.authenticate('local'), (request, response) => {
+    console.log(request.session);
+    console.log(request.user);
+    response.send(200);
 });
+
+// authRouter.post('/login/', (req, res, next) => {
+//     passport.authenticate('local', (err, user, info) => {
+//         if (err) return next(err);
+//         if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+//         req.login(user, (err) => {
+//             if (err) return next(err);
+//             return res.status(200).json({ message: 'Logged in successfully' });
+//         });
+//     })(req, res, next);
+// });
 
 authRouter.post('/logout/', (request, response) => {
     if(!request.user) return response.sendStatus(401);
