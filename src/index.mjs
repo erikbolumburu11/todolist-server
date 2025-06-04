@@ -42,7 +42,7 @@ app.use(session({
     cookie: {
         maxAge: 60000 * 60 * 24, 
         sameSite: 'none',
-        secure: false,
+        secure: true,
         path: '/'
     },
     store: new (connectpg(session))({
