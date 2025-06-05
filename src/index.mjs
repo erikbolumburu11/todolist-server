@@ -1,9 +1,6 @@
 import express from 'express'
-import session from 'express-session'
-import passport from 'passport'
 import cors from 'cors'
 import pgPromise from 'pg-promise'
-import connectpg from 'connect-pg-simple'
 
 import dotenv from 'dotenv'
 dotenv.config({ path: './.env'});
@@ -44,25 +41,6 @@ db.connect().then(obj => {
 }).catch(error => {
     console.log('ERROR: ', error.message || error);
 })
-
-
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: true,
-    resave: true,
-    cookie: {
-        maxAge: 60000 * 60 * 24, 
-        sameSite: isProduction ? 'none' : 'lax',
-        secure: isProduction,
-        path: '/'
-    },
-    store: new (connectpg(session))({
-        pgPromise: db
-    })
-}));
-
-app.use(passport.initialize());
-app.use(passport.session())
 
 app.use('/auth/', authRouter);
 app.use('/tasks/', tasksRouter);
