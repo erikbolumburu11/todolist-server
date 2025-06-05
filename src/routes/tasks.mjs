@@ -4,7 +4,7 @@ import { authenticateJWT } from "../utils/authentication.mjs";
 
 const tasksRouter = Router();
 
-tasksRouter.post('/new/task/', (request, response) => {
+tasksRouter.post('/new/task/', authenticateJWT, (request, response) => {
     const groupid = request.body.groupid === -1 ? null : request.body.groupid;
     return createTask(request.body.taskName, request.user.id, request.body.due, groupid, response);
 });
